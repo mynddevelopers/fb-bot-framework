@@ -6,9 +6,10 @@ var EventEmitter = require('events').EventEmitter;
 
 var request = require("request");
 
-const FB_MESSENGER_ENDPOINT = "https://graph.facebook.com/v2.6/me/messages";
-const FB_PROFILE_ENDPOINT = "https://graph.facebook.com/v2.6/";
-const FB_SETTINGS_ENDPOINT = "https://graph.facebook.com/v2.6/me/thread_settings";
+const FB_MESSENGER_ENDPOINT = "https://graph.facebook.com/v2.10/me/messages";
+const FB_PROFILE_ENDPOINT = "https://graph.facebook.com/v2.10/";
+const FB_SETTINGS_ENDPOINT = "https://graph.facebook.com/v2.10/me/thread_settings";
+const FB_MESSENGER_PROFILE_ENDPOINT = "https://graph.facebook.com/v2.10/me/messenger_profile";
 
 const NOTIFICATION_TYPE = {
     REGULAR: "REGULAR",
@@ -340,6 +341,48 @@ FBBotFramework.prototype.setPersistentMenu = function (menuButtons, cb) {
         }
     });
 };
+// Nested Persistent Menu
+FBBotFramework.prototype.setPersistentMenuX = function(persistent_menu, cb) {  
+    var req = {
+        url: FB_MESSENGER_PROFILE_ENDPOINT,
+        qs: {access_token: this.page_token},
+        method: "POST",
+        json: {
+            "persistent_menu" : persistent_menu
+        }
+    };
+
+    request(req, function (err, res, body) {
+        if (cb) {
+            if (err) return cb(err);
+            if (body.error) return cb(body.error);
+            cb(null, body);
+        }
+    }); 
+
+}
+
+FBBotFramework.prototype.deletePersistentMenu = function(cb) {  
+    var req = {
+        url: FB_MESSENGER_PROFILE_ENDPOINT,
+        qs: {access_token: this.page_token},
+        method: "DELETE",
+        json: {
+            "fields" : [
+                'PERSISTENT_MENU'
+            ]
+        }
+    };
+
+    request(req, function (err, res, body) {
+        if (cb) {
+            if (err) return cb(err);
+            if (body.error) return cb(body.error);
+            cb(null, body);
+        }
+    }); 
+
+}
 
 
 FBBotFramework.prototype.sendQuickReplies = function (recipient, text, replies, notificationType, cb) {
@@ -378,6 +421,25 @@ FBBotFramework.prototype.sendListMessage = function (recipient, elements, notifi
     this.send(recipient, messageData, notificationType, cb);
 
 
+};
+
+FBBotFramework.prototype.whiteListDomains = function(domains, cb) {
+     var req = {
+        url: FB_MESSENGER_PROFILE_ENDPOINT,
+        qs: {access_token: this.page_token},
+        method: "POST",
+        json: {
+            "whitelisted_domains": domains
+        }
+    };
+
+    request(req, function (err, res, body) {
+        if (cb) {
+            if (err) return cb(err);
+            if (body.error) return cb(body.error);
+            cb(null, body);
+        }
+    });
 };
 
 
