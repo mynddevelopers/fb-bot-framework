@@ -423,7 +423,7 @@ FBBotFramework.prototype.sendListMessage = function (recipient, elements, notifi
 
 };
 
-FBBotFramework.prototype.whiteListDomains = function(domains, cb) {
+FBBotFramework.prototype.whitelistDomains = function(domains, cb) {
      var req = {
         url: FB_MESSENGER_PROFILE_ENDPOINT,
         qs: {access_token: this.page_token},
