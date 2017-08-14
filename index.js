@@ -256,12 +256,16 @@ FBBotFramework.prototype.middleware = function () {
 
                     // Trigger onPostback Listener
                     if (event.postback && event.postback.payload) {
-                        bot.emit('postback', sender, event.postback.payload);
+                        bot.emit('postback', sender, event.postback.payload, event.postback.referral);
                     }
 
                     // Trigger onAttachment Listener
                     if (event.message && event.message.attachments) {
                         bot.emit('attachment', sender, event.message.attachments);
+                    }
+
+                    if (event.referral) {
+                        bot.emit('messagingReferral', sender, event.referral);
                     }
 
                 });
@@ -342,7 +346,7 @@ FBBotFramework.prototype.setPersistentMenu = function (menuButtons, cb) {
     });
 };
 // Nested Persistent Menu
-FBBotFramework.prototype.setPersistentMenuX = function(persistent_menu, cb) {  
+FBBotFramework.prototype.setPersistentMenuX = function(persistent_menu, cb) {
     var req = {
         url: FB_MESSENGER_PROFILE_ENDPOINT,
         qs: {access_token: this.page_token},
@@ -358,11 +362,11 @@ FBBotFramework.prototype.setPersistentMenuX = function(persistent_menu, cb) {
             if (body.error) return cb(body.error);
             cb(null, body);
         }
-    }); 
+    });
 
 }
 
-FBBotFramework.prototype.deletePersistentMenu = function(cb) {  
+FBBotFramework.prototype.deletePersistentMenu = function(cb) {
     var req = {
         url: FB_MESSENGER_PROFILE_ENDPOINT,
         qs: {access_token: this.page_token},
@@ -380,7 +384,7 @@ FBBotFramework.prototype.deletePersistentMenu = function(cb) {
             if (body.error) return cb(body.error);
             cb(null, body);
         }
-    }); 
+    });
 
 }
 
