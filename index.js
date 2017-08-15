@@ -446,5 +446,41 @@ FBBotFramework.prototype.whitelistDomains = function(domains, cb) {
     });
 };
 
+FBBotFramework.prototype.sendSenderAction = function(userId, action, cb) {
+    var req = {
+       url: FB_MESSENGER_ENDPOINT,
+       qs: {access_token: this.page_token},
+       method: "POST",
+       json: {
+          recipient:{
+          	id: userId
+          },
+          sender_action: action
+      }
+   };
+
+   request(req, function (err, res, body) {
+       if (cb) {
+           if (err) return cb(err);
+           if (body.error) return cb(body.error);
+           cb(null, body);
+       }
+   });
+}
+
+FBBotFramework.prototype.typingOn = function(userId, cb) {
+    this.sendSenderAction(userId, 'typing_on', cb);
+}
+
+FBBotFramework.prototype.typingOff = function(userId, cb) {
+    this.sendSenderAction(userId, 'typing_off', cb);
+}
+
+FBBotFramework.prototype.markSeen = function(userId, cb) {
+    this.sendSenderAction(userId, 'mark_seen', cb);
+}
+
+
+
 
 module.exports = FBBotFramework;
