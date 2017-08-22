@@ -19,7 +19,8 @@
   "author": "Kinni Mew",
   "license": "MIT",
   "dependencies": {
-    "request": "^2.72.0"
+    "request": "^2.81.0",
+    "request-promise-native": "^1.0.4"
   },
   "devDependencies": {
     "chai": "^3.5.0",
